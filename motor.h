@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 // parameters for speed calculation
-#define WHEEL_CIRCUMFERENCE 690 // 690 for original M365 motor
+#define WHEEL_CIRCUMFERENCE 2154 // 2154 for 28" (700) wheel
 #define GEAR_RATIO 15 // 15 for original M365 motor
 
 // ADC channel to measure the battery voltage
