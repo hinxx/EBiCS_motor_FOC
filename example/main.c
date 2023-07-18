@@ -20,10 +20,10 @@
 #pragma GCC push_options
 #pragma GCC optimize ("O0")
 
-UART_HandleTypeDef huart3;
+UART_HandleTypeDef huart1;
 
-DMA_HandleTypeDef hdma_usart3_tx;
-DMA_HandleTypeDef hdma_usart3_rx;
+DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart1_rx;
 
 MotorStatePublic_t MSPublic;
 
@@ -52,10 +52,10 @@ static void DMA_Init(void) {
   /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
 
-  // DMA channel 3: used for USART3_RX
+  // DMA channel 5: used for USART1_RX
   /* DMA1_Channel5_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 3, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 }
 
 /**
@@ -111,23 +111,23 @@ void SystemClock_Config(void) {
 }
 
 /**
- * @brief USART3 Initialization Function
+ * @brief USART1 Initialization Function
  * @param None
  * @retval None
  */
-static void USART3_UART_Init(void) {
+static void USART1_UART_Init(void) {
 
-  huart3.Instance = USART3;
+  huart1.Instance = USART1;
 
-  huart3.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 115200;
 
-  huart3.Init.WordLength = UART_WORDLENGTH_8B;
-  huart3.Init.StopBits = UART_STOPBITS_1;
-  huart3.Init.Parity = UART_PARITY_NONE;
-  huart3.Init.Mode = UART_MODE_TX_RX;
-  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart3) != HAL_OK) {
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK) {
     _Error_Handler(__FILE__, __LINE__);
   }
 }
@@ -272,11 +272,11 @@ int main(void) {
   // init GPIOS
   GPIO_Init();
 
-  // init DMA for ADC, USART_1 and USART_3
+  // init DMA for ADC, USART_1
   DMA_Init();
 
-  // init USART_3 for debug
-  USART3_UART_Init();
+  // init USART_1 for debug
+  USART1_UART_Init();
 
   init_motor();
 

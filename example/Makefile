@@ -50,7 +50,7 @@ system_stm32f1xx.c
 
 # ASM sources
 ASM_SOURCES =  \
-startup_stm32f103c8tx.s
+startup_stm32f103x6.s
 
 
 #######################################
@@ -95,7 +95,7 @@ AS_DEFS =
 # C defines
 C_DEFS =  \
 -DUSE_HAL_DRIVER \
--DSTM32F103xB \
+-DSTM32F103x6 \
 -DARM_MATH_CM3
 
 
@@ -122,10 +122,11 @@ ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
 endif
 
-ifeq ($(BUILD_ENV), development)
+# ifeq ($(BUILD_ENV), development)
+# CFLAGS += -DDO_NOT_USE_M365_BOOTLOADER
+# else
+# endif
 CFLAGS += -DDO_NOT_USE_M365_BOOTLOADER
-else
-endif
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
@@ -135,7 +136,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = STM32F103C8Tx_FLASH.ld
+LDSCRIPT = STM32F103C6Tx_FLASH_Bootloader.ld
 
 # libraries
 LIBS = -lc -lm -lnosys -larm_cortexM3l_math

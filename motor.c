@@ -70,7 +70,7 @@ DMA_HandleTypeDef hdma_adc1;
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
-TIM_HandleTypeDef htim4;
+// TIM_HandleTypeDef htim4;
 
 uint16_t adcData1[6 * sizeof(uint32_t)]; // point to buffer for ADC1 inputs
 
@@ -225,7 +225,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     GPIOB->IDR,
     GPIOC->IDR,
     GPIOD->IDR,
-    GPIOE->IDR
+    // GPIOE->IDR
   };
 
   bool hall1_state = HAL_GPIO_ReadPin(p_MotorConfig->exti.motor.ports[0], p_MotorConfig->exti.motor.pins[0]);
@@ -1007,8 +1007,8 @@ void enable_gpio_clock(GPIO_TypeDef** ports) {
       __HAL_RCC_GPIOC_CLK_ENABLE();
     } else if (ports[i] == GPIOD) {
       __HAL_RCC_GPIOD_CLK_ENABLE();
-    } else if (ports[i] == GPIOE) {
-      __HAL_RCC_GPIOE_CLK_ENABLE();
+    // } else if (ports[i] == GPIOE) {
+    //   __HAL_RCC_GPIOE_CLK_ENABLE();
     }
 
     i++;

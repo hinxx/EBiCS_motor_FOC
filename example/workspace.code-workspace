@@ -10,6 +10,7 @@
   "settings": {
     "git.ignoreLimitWarning": true,
     "files.associations": {
+      "*.exp": "shellscript",
       "optional": "c",
       "istream": "c",
       "ostream": "c",
@@ -20,7 +21,8 @@
       "type_traits": "c",
       "utility": "c",
       "motor.h": "c",
-      "main.h": "c"
+      "main.h": "c",
+      "stdlib.h": "c"
     }
   }
 }
