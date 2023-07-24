@@ -44,22 +44,21 @@ extern "C" {
 #define WHELL_SPEED_SENSOR_PORT   GPIOB
 #define WHELL_SPEED_SENSOR_PIN    GPIO_PIN_5
 
-/*
 #define DEBUG_PIN_CONFIG \
-  GPIO_InitStruct.Pin = GPIO_PIN_15; \
+  GPIO_InitStruct.Pin = GPIO_PIN_2; \
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP; \
-  GPIO_InitStruct.Speed = GPIO_SPEED_LOW; \
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct)
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW; \
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct)
 
 #define DEBUG_TOGGLE \
-  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_15) // DEBUG
+  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2) // DEBUG
 
 #define DEBUG_ON \
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, true) // DEBUG
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, true) // DEBUG
 
 #define DEBUG_OFF \
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, false) // DEBUG
-*/
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, false) // DEBUG
+
 
 void Error_Handler(void);
 
