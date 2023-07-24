@@ -902,10 +902,13 @@ static void TIM1_Init(void) {
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 1;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCNPolarity = TIM_OCPOLARITY_HIGH; //TODO: depends on gate driver!
+  // sConfigOC.OCNPolarity = TIM_OCPOLARITY_HIGH; //TODO: depends on gate driver!
+  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_LOW; // HK: EBiCS FW IRS2003 !
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  sConfigOC.OCIdleState = TIM_OCIDLESTATE_SET;
-  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  // sConfigOC.OCIdleState = TIM_OCIDLESTATE_SET;
+  // sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;  // HK EBiCS FW
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_SET;  // HK EBiCS FW
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1)
       != HAL_OK) {
     _motor_error_handler(__FILE__, __LINE__);
@@ -921,9 +924,11 @@ static void TIM1_Init(void) {
     _motor_error_handler(__FILE__, __LINE__);
   }
 
-  sConfigOC.OCMode = TIM_OCMODE_PWM2;
-  sConfigOC.Pulse = _T - 1;
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4)
+  // sConfigOC.OCMode = TIM_OCMODE_PWM2;
+  // sConfigOC.Pulse = _T - 1;
+  // HK without this phase currents are not properly read out!!!
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;  // HK EBiCS FW
+  if (HAL_TIM_OC_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4)
       != HAL_OK) {
     _motor_error_handler(__FILE__, __LINE__);
   }
