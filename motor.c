@@ -380,7 +380,7 @@ int32_t speed_to_tics(uint8_t speed) {
 }
 
 int8_t tics_to_speed(uint32_t tics) {
-  return WHEEL_CIRCUMFERENCE * 5 * 3600 / (6 * GEAR_RATIO * tics * 10);;
+  return WHEEL_CIRCUMFERENCE * 5 * 3600 / (6 * GEAR_RATIO * tics * 10);
 }
 
 void motor_autodetect() {
@@ -1537,11 +1537,11 @@ void FOC_calculation(int16_t int16_i_as, int16_t int16_i_bs, q31_t q31_teta, Mot
 
   q31_t sinevalue = 0, cosinevalue = 0;
 
-    // Clark transformation
+  // Clark transformation
   arm_clarke_q31((q31_t) int16_i_as, (q31_t) int16_i_bs, &q31_i_alpha, &q31_i_beta);
 
   arm_sin_cos_q31(q31_teta, &sinevalue, &cosinevalue);
-  // limit output valyes of arm_sin_cos_q31() as some seem wrong
+  // limit output values of arm_sin_cos_q31() as some seem wrong
   if (sinevalue == -2147483648) sinevalue = -2147483647;
   if (cosinevalue == 2147483648) cosinevalue = 2147483647;
 
@@ -1558,7 +1558,7 @@ void FOC_calculation(int16_t int16_i_as, int16_t int16_i_bs, q31_t q31_teta, Mot
 
   // Control iq
   
-  //set static volatage for hall angle detection
+  // set static voltage for hall angle detection
   if (MS->KV_detect_flag) {  
     MS->u_q = MS->KV_detect_flag;
     MS->u_d = 0;
