@@ -6,7 +6,7 @@
                 "${workspaceFolder}/**"
             ],
             "defines": ["USE_HAL_DRIVER", "STM32F103x6", "ARM_MATH_CM3"],
-            "compilerPath": "/data/data/ecoride/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc",
+            "compilerPath": "/home/hinxx/Projects/ecoride/EBiCS/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc",
             "cStandard": "c99",
             "cppStandard": "c++11",
             "intelliSenseMode": "linux-gcc-arm"
