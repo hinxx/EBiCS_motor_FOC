@@ -397,6 +397,9 @@ void motor_autodetect() {
     HAL_Delay(5);
 
     if (ui8_hall_state_old != ui8_hall_state) {
+			printf_("angle: %d, hallstate:  %d, hallcase %d \n",
+					(int16_t) (((q31_rotorposition_absolute >> 23) * 180) >> 8),
+					ui8_hall_state, ui8_hall_case);
 
       switch (ui8_hall_case) // 12 cases for each transition from one stage to the next. 6x forward, 6x reverse
       {
@@ -483,7 +486,16 @@ void motor_autodetect() {
   EE_WriteVariable(EEPROM_POS_HALL_26, Hall_26 >> 16);
   EE_WriteVariable(EEPROM_POS_HALL_64, Hall_64 >> 16);
 
-  HAL_FLASH_Lock();
+	printf_("autodetect result:\n");
+	printf_("Hall_Order: %d \n",i16_hall_order);
+	printf_("Hall_45: %u \n",	Hall_45);
+	printf_("Hall_51: %u \n",	Hall_51);
+	printf_("Hall_13: %u \n",	Hall_13);
+	printf_("Hall_32: %u \n",	Hall_32);
+	printf_("Hall_26: %u \n",	Hall_26);
+	printf_("Hall_64: %u \n",	Hall_64);
+	if(!ui32_KV)ui32_KV=111;
+	printf_("KV: %d \n",ui32_KV	);
 
   MS.hall_angle_detect_flag = false;
 
@@ -528,6 +540,8 @@ void motor_slow_loop(MotorStatePublic_t* motorStatePublic) {
   q31_batt_voltage_acc += MSP->adcData[3];
   q31_battery_voltage = (q31_batt_voltage_acc >> 5) * CAL_BAT_V;
   MSP->battery_voltage = q31_battery_voltage;
+
+  MSP->debug[0] = MSP->battery_voltage;
 
   // set power to zero at low voltage
   if (q31_battery_voltage < p_MotorStatePublic->battery_voltage_min) {
@@ -584,6 +598,9 @@ void motor_slow_loop(MotorStatePublic_t* motorStatePublic) {
         MS.i_d_setpoint = MS.i_d_setpoint_temp;
       }
     }
+    MSP->debug[5] = MS.i_q_setpoint;
+    MSP->debug[6] = MS.i_d_setpoint;
+    MSP->debug[7] = MS.i_setpoint_abs;
 
     // run KV detection
     // KV detection works with ramping up uq until it reaches 1900, than it is ramped down to near zero again. 
@@ -659,6 +676,7 @@ void motor_slow_loop(MotorStatePublic_t* motorStatePublic) {
   ud_filtered = ud_cum >> 8;
 
   MS.Battery_Current = get_battery_current(iq_filtered, id_filtered, uq_filtered, ud_filtered) * sign(iq_filtered) * i8_direction * i8_reverse_flag;
+  MSP->debug[1] = MS.Battery_Current;
 
   // enable PWM if power is wanted and speed is lower than idle speed
   if (MS.i_q_setpoint && pwm_is_enabled() == 0 && (uint32_SPEEDx100_cumulated >> SPEEDFILTER) * 1000 < (ui32_KV * q31_battery_voltage)) {
@@ -1093,6 +1111,8 @@ static void ADC_Init() {
 static void GPIO_Init() {
   GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
+  // DEBUG_PIN_CONFIG;
+  
   enable_gpio_clock(p_MotorConfig->exti.motor.ports);
   enable_gpio_clock(p_MotorConfig->exti.user.ports);
   enable_gpio_clock(p_MotorConfig->adc.motor.ports);
@@ -1274,7 +1294,7 @@ void runPIcontrol() {
   q31_t battery_current = get_battery_current(MS.i_q_setpoint,MS.i_d_setpoint, uq_filtered, ud_filtered);
 
   // DEBUG
-  p_MotorStatePublic->debug[0] = battery_current;
+  // p_MotorStatePublic->debug[0] = battery_current;
 
   if (MS.i_q * i8_direction * i8_reverse_flag > 100) { // motor mode
     if (battery_current < ((BATTERYCURRENT_MAX * 7) >> 3)) {
@@ -1306,7 +1326,7 @@ void runPIcontrol() {
   q31_u_d_temp = -PI_control(&PI_id); // control direct current to zero
 
   // DEBUG
-  p_MotorStatePublic->debug[1] = MS.i_d;
+  // p_MotorStatePublic->debug[1] = MS.i_d;
 
   arm_sqrt_q31((q31_u_d_temp*q31_u_d_temp+q31_u_q_temp*q31_u_q_temp)<<1,&MS.u_abs);
   MS.u_abs = (MS.u_abs>>16)+1;
@@ -1438,6 +1458,7 @@ void motor_init(MotorConfig_t* motorConfig, MotorStatePublic_t* motorStatePublic
   ui16_ph1_offset = ui16_ph1_offset >> 4;
   ui16_ph2_offset = ui16_ph2_offset >> 4;
   ui16_ph3_offset = ui16_ph3_offset >> 4;
+  printf_("phase current offsets:  %d, %d, %d\n", ui16_ph1_offset, ui16_ph2_offset, ui16_ph3_offset);
 
   ADC1->JSQR = (((uint32_t) adc_channels_used[0]) << 15); //ADC1 injected reads phase A JL = 0b00, JSQ4 = 0b00100 (decimal 4 = channel 4)
   ADC1->JOFR1 = ui16_ph1_offset;
@@ -1650,6 +1671,13 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc) {
   if (pwm_is_enabled()) {
     FOC_calculation(i16_ph1_current, i16_ph2_current, q31_rotorposition_absolute, &MS);
   }
+  p_MotorStatePublic->debug[3] = MS.u_q;
+  p_MotorStatePublic->debug[4] = MS.u_d;
+  // p_MotorStatePublic->debug[5] = q31_u_q_temp;
+  // p_MotorStatePublic->debug[6] = q31_u_d_temp;
+  p_MotorStatePublic->debug[8] = i16_ph1_current;
+  p_MotorStatePublic->debug[9] = i16_ph2_current;
+
 
   // apply PWM values that are calculated inside FOC_calculation()
   TIM1->CCR1 = (uint16_t) switchtime[0];

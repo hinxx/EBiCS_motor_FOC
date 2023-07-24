@@ -119,7 +119,8 @@ static void USART1_UART_Init(void) {
 
   huart1.Instance = USART1;
 
-  huart1.Init.BaudRate = 115200;
+  // huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 57600; // HK 115200 gives me garbage?!
 
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
@@ -312,7 +313,19 @@ int main(void) {
       static uint8_t debug_cnt = 0;
       if (++debug_cnt > 13) { // every 13 * 20 ms = 260ms
         debug_cnt = 0;
-        printf_("%d, %d\n", MSPublic.debug[0], MSPublic.debug[1] * CAL_I);
+        printf_("Bv %d Bc %d Ss %d T %d U %d %d SP %d %d A %d PH %d %d\n",
+        MSPublic.debug[0], // battery voltage
+        MSPublic.debug[1] * CAL_I, // baterry current
+        MSPublic.debug[2], // six step flag
+        ui16_throttle,
+        MSPublic.debug[3], // u_q
+        MSPublic.debug[4], // u_d
+        MSPublic.debug[5], // i_q_setpoint
+        MSPublic.debug[6], // i_d_setpoint
+        MSPublic.debug[7], // i_setpoint_abs
+        MSPublic.debug[8], // i16_ph1_current
+        MSPublic.debug[9]  // i16_ph2_current
+        );
       }
     }
   }
