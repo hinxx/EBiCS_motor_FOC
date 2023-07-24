@@ -16,7 +16,8 @@ extern "C" {
 #define ADC_VOLTAGE 3
 
 // calibration factors for voltage and current
-#define CAL_BAT_V 14 	// ADC counts * CAL_BAT_V = Battery voltage in mV
+// #define CAL_BAT_V 14 	// ADC counts * CAL_BAT_V = Battery voltage in mV
+#define CAL_BAT_V 25 	// HK EBiCS FW
 
 // battery voltage limits in mV
 #define BATTERYVOLTAGE_MIN 33000
