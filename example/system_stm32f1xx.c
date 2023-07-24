@@ -94,7 +94,7 @@
 /*!< Uncomment the following line if you need to relocate the vector table
  anywhere in Flash or Sram, else the vector table is kept at the automatic
  remap of boot address selected */
-//#define USER_VECT_TAB_ADDRESS
+#define USER_VECT_TAB_ADDRESS
 
 #if defined(USER_VECT_TAB_ADDRESS)
 /*!< Uncomment the following line if you need to relocate your vector Table
@@ -140,6 +140,7 @@
  variable is updated automatically.
  */
 uint32_t SystemCoreClock = 16000000;
+// uint32_t SystemCoreClock = 72000000U; // HK EBiCS FW
 const uint8_t AHBPrescTable[16U] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7,
     8, 9 };
 const uint8_t APBPrescTable[8U] = { 0, 0, 0, 0, 1, 2, 3, 4 };
@@ -167,14 +168,33 @@ const uint8_t APBPrescTable[8U] = { 0, 0, 0, 0, 1, 2, 3, 4 };
  */
 
 /**
- * @brief  Setup the microcontroller system
- *         Initialize the Embedded Flash Interface, the PLL and update the
- *         SystemCoreClock variable.
- * @note   This function should be used only after reset.
- * @param  None
- * @retval None
- */
-void SystemInit(void) {
+  * @brief  Setup the microcontroller system
+  *         Initialize the Embedded Flash Interface, the PLL and update the
+  *         SystemCoreClock variable.
+  * @note   This function should be used only after reset.
+  * @param  None
+  * @retval None
+  */
+void SystemInit (void) {
+  /* Reset the RCC clock configuration to the default reset state(for debug purpose) */
+  /* Set HSION bit */
+  RCC->CR |= 0x00000001U;
+
+  /* Reset SW, HPRE, PPRE1, PPRE2, ADCPRE and MCO bits */
+  RCC->CFGR &= 0xF8FF0000U;
+
+  /* Reset HSEON, CSSON and PLLON bits */
+  RCC->CR &= 0xFEF6FFFFU;
+
+  /* Reset HSEBYP bit */
+  RCC->CR &= 0xFFFBFFFFU;
+
+  /* Reset PLLSRC, PLLXTPRE, PLLMUL and USBPRE/OTGFSPRE bits */
+  RCC->CFGR &= 0xFF80FFFFU;
+
+  /* Disable all interrupts and clear pending bits  */
+  RCC->CIR = 0x009F0000U;
+
 #if defined(STM32F100xE) || defined(STM32F101xE) || defined(STM32F101xG) || defined(STM32F103xE) || defined(STM32F103xG)
   #ifdef DATA_IN_ExtSRAM
     SystemInit_ExtMemCtl(); 
