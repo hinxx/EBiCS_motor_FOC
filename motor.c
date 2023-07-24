@@ -1031,9 +1031,9 @@ uint8_t get_adc_channel(GPIO_TypeDef* port, uint16_t pin) {
 
   if (port == GPIOA) {
     adc_channel = pin; // first 7 pins of PortA has similar number as ADC channel
-  } else if (GPIOB) {
+  } else if (port == GPIOB) {
     adc_channel = 8 + pin; // PB0 and PB1 only
-  } else if (GPIOC) {
+  } else if (port == GPIOC) {
     adc_channel = 10 + pin; // PC0 to PC5
   }
 
