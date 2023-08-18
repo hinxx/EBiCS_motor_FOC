@@ -9,8 +9,10 @@ extern "C" {
 #endif
 
 // parameters for speed calculation
-#define WHEEL_CIRCUMFERENCE 2154 // 2154 for 28" (700) wheel
-#define GEAR_RATIO 15 // 15 for original M365 motor
+// #define WHEEL_CIRCUMFERENCE 2154 // 700C wheel
+#define WHEEL_CIRCUMFERENCE 2234 // HK 28" wheel
+// #define GEAR_RATIO 15 // 15 for original M365 motor
+#define GEAR_RATIO 50 // HK M129 motor hall sensor events in 1 wheel revolution
 
 // ADC channel to measure the battery voltage
 #define ADC_VOLTAGE 3

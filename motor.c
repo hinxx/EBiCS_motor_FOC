@@ -376,11 +376,11 @@ void get_standstill_position() {
 }
 
 int32_t speed_to_tics(uint8_t speed) {
-  return WHEEL_CIRCUMFERENCE * 5 * 3600 / (6 * GEAR_RATIO * speed * 10);
+  return WHEEL_CIRCUMFERENCE * 5 * 3600 / (GEAR_RATIO * speed * 10);
 }
 
 int8_t tics_to_speed(uint32_t tics) {
-  return WHEEL_CIRCUMFERENCE * 5 * 3600 / (6 * GEAR_RATIO * tics * 10);
+  return WHEEL_CIRCUMFERENCE * 5 * 3600 / (GEAR_RATIO * tics * 10);
 }
 
 void motor_autodetect() {
@@ -504,13 +504,13 @@ void motor_autodetect() {
 }
 
 int16_t internal_tics_to_speedx100 (uint32_t tics) {
-  return WHEEL_CIRCUMFERENCE * 50 * 3600 / (6 * GEAR_RATIO * tics);
+  return WHEEL_CIRCUMFERENCE * 50 * 3600 / (GEAR_RATIO * tics);
 }
 
 void calculate_tic_limits(int8_t speed_limit) {
   // tics = wheelcirc * timerfrequency / (no. of hallevents per rev * gear-ratio * speedlimit) * 3600 / 1000000
-  tics_lower_limit = WHEEL_CIRCUMFERENCE * 5 * 3600 / (6 * GEAR_RATIO * speed_limit * 10);
-  tics_higher_limit = WHEEL_CIRCUMFERENCE * 5 * 3600 / (6 * GEAR_RATIO * (speed_limit + 2) * 10);
+  tics_lower_limit = WHEEL_CIRCUMFERENCE * 5 * 3600 / (GEAR_RATIO * speed_limit * 10);
+  tics_higher_limit = WHEEL_CIRCUMFERENCE * 5 * 3600 / (GEAR_RATIO * (speed_limit + 2) * 10);
 }
 
 q31_t get_battery_current(q31_t iq, q31_t id, q31_t uq, q31_t ud) {
