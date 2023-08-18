@@ -558,18 +558,19 @@ void motor_slow_loop(MotorStatePublic_t* motorStatePublic) {
 
     // i_q current limits
     int16_t phase_current_limit = MSP->phase_current_limit / CAL_I;
-    if (MSP->i_q_setpoint_target > phase_current_limit) {
+    int16_t i_q_setpoint_target = MSP->i_q_setpoint_target / CAL_I;
+    if (i_q_setpoint_target > phase_current_limit) {
       MS.i_q_setpoint_temp = phase_current_limit;
     }
 
-    if (MSP->i_q_setpoint_target < -phase_current_limit) {
+    if (i_q_setpoint_target < -phase_current_limit) {
       MS.i_q_setpoint_temp = -phase_current_limit;
     }
 
     calculate_tic_limits(MSP->speed_limit);
 
     // ramp down current at speed limit
-    MS.i_q_setpoint_temp = map(ui16_halls_tim2tics_filtered, tics_higher_limit, tics_lower_limit, 0, MSP->i_q_setpoint_target);
+    MS.i_q_setpoint_temp = map(ui16_halls_tim2tics_filtered, tics_higher_limit, tics_lower_limit, 0, i_q_setpoint_target);
 
     if (MSP->field_weakening_enable) {
       
